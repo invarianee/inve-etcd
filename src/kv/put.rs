@@ -1,0 +1,79 @@
+use super::KeyValue;
+use crate::lease::LeaseId;
+use crate::proto::etcdserverpb;
+use crate::ResponseHeader;
+
+#[derive(Debug)]
+pub struct PutRequest {
+    proto: etcdserverpb::PutRequest,
+}
+
+impl PutRequest {
+    pub fn new<K, V>(key: K, value: V) -> Self
+    where
+        K: Into<Vec<u8>>,
+        V: Into<Vec<u8>>,
+    {
+        Self {
+            proto: etcdserverpb::PutRequest {
+                key: key.into(),
+                value: value.into(),
+                lease: 0,
+                prev_kv: false,
+                ignore_value: false,
+                ignore_lease: false,
+            },
+        }
+    }
+
+    pub fn lease(mut self, lease: LeaseId) -> Self {
+        self.proto.lease = lease as i64;
+        self
+    }
+
+    pub fn prev_kv(mut self, prev_kv: bool) -> Self {
+        self.proto.prev_kv = prev_kv;
+        self
+    }
+
+    pub fn ignore_value(mut self) -> Self {
+        self.proto.ignore_value = true;
+        self
+    }
+
+    pub fn ignore_lease(mut self) -> Self {
+        self.proto.ignore_lease = true;
+        self
+    }
+}
+
+impl From<PutRequest> for etcdserverpb::PutRequest {
+    fn from(x: PutRequest) -> Self {
+        x.proto
+    }
+}
+
+impl<K, V> From<(K, V)> for PutRequest
+where
+    K: Into<Vec<u8>>,
+    V: Into<Vec<u8>>,
+{
+    fn from(kv: (K, V)) -> Self {
+        Self::new(kv.0, kv.1)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct PutResponse {
+    pub header: ResponseHeader,
+    pub prev_kv: KeyValue,
+}
+
+impl From<etcdserverpb::PutResponse> for PutResponse {
+    fn from(proto: etcdserverpb::PutResponse) -> Self {
+        Self {
+            header: From::from(proto.header.expect("must fetch header")),
+            prev_kv: From::from(proto.prev_kv.unwrap_or(Default::default())),
+        }
+    }
+}

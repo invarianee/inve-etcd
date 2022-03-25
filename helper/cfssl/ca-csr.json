@@ -1,0 +1,16 @@
+{
+    "CN": "INVE_ETCD",
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "US",
+            "L": "CA",
+            "O": "INVE_ETCD INC.",
+            "ST": "Los Angeles",
+            "OU": "E11"
+        }
+    ]
+}

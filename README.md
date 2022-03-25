@@ -1,2 +1,2 @@
 # inve-etcd
-A simple etcd client for Rust.
+A simple etcd v3 client for Rust.

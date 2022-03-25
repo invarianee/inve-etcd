@@ -1,0 +1,30 @@
+[package]
+name = "inve-etcd"
+version = "0.0.1"
+authors = ["inkhare <iapricot@foxmail.com>"]
+description = "A simple etcd v3 client for Rust."
+edition = "2021"
+license = "MIT/Apache-2.0"
+readme = "README.md"
+keywords = ["etcd", "client"]
+
+[features]
+default = ["tls"]
+tls = ["tonic/tls", "tokio/fs"]
+
+[dependencies]
+async-trait = "0.1"
+tonic = "0.6"
+prost = "0.9"
+tokio = "1.17"
+tokio-stream = "0.1"
+futures = "0.3"
+thiserror = "1.0"
+http = "0.2"
+
+[dev-dependencies]
+tokio = { version = "1.17", features = ["full"] }
+rand = "0.8"
+
+[build-dependencies]
+tonic-build = "0.6"
